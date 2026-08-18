@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { consumeSecret, SecretApiError } from '../api/secrets';
+import RainbowConfetti from '../components/RainbowConfetti.vue';
 
 const props = defineProps<{ id: string }>();
 
@@ -8,6 +9,7 @@ const password = ref('');
 const errorMessage = ref('');
 const loading = ref(false);
 const revealed = ref(false);
+const confettiTrigger = ref(0);
 
 async function reveal() {
   loading.value = true;
@@ -15,6 +17,7 @@ async function reveal() {
   try {
     password.value = await consumeSecret(props.id);
     revealed.value = true;
+    confettiTrigger.value++;
   } catch (err) {
     errorMessage.value =
       err instanceof SecretApiError ? err.message : 'Kon het wachtwoord niet ophalen.';
@@ -29,6 +32,7 @@ async function copyPassword() {
 </script>
 
 <template>
+  <RainbowConfetti :trigger="confettiTrigger" />
   <v-container
     class="fill-height"
     max-width="640"

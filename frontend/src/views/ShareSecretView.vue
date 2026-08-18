@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { createSecret, SecretApiError } from '../api/secrets';
+import RainbowConfetti from '../components/RainbowConfetti.vue';
 
 const password = ref('');
 const expiryOption = ref<number | null>(null);
 const loading = ref(false);
 const errorMessage = ref('');
 const shareLink = ref('');
+const confettiTrigger = ref(0);
 
 const expiryOptions = [
   { title: 'Geen vervaldatum', value: null },
@@ -24,6 +26,7 @@ async function onSubmit() {
     const result = await createSecret(password.value, expiryOption.value ?? undefined);
     shareLink.value = `${window.location.origin}/s/${result.id}`;
     password.value = '';
+    confettiTrigger.value++;
   } catch (err) {
     errorMessage.value =
       err instanceof SecretApiError ? err.message : 'Kon de link niet aanmaken. Probeer het opnieuw.';
@@ -43,6 +46,7 @@ function reset() {
 </script>
 
 <template>
+  <RainbowConfetti :trigger="confettiTrigger" />
   <v-container
     class="fill-height"
     max-width="640"
