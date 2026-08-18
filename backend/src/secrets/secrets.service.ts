@@ -1,11 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { and, eq, gt, isNull, or } from 'drizzle-orm';
 import { DRIZZLE } from '../db/db.module';
+import type { Db } from '../db/db.module';
 import * as schema from '../db/schema';
 import { EncryptionService } from './encryption.service';
 import { SecretNotFoundException } from './secret-not-found.exception';
-
-type Db = ReturnType<typeof import('drizzle-orm/postgres-js').drizzle>;
 
 @Injectable()
 export class SecretsService {
@@ -23,7 +22,10 @@ export class SecretsService {
     const [row] = await this.db
       .insert(schema.secrets)
       .values({ ciphertext, iv, authTag, expiresAt })
-      .returning({ id: schema.secrets.id, expiresAt: schema.secrets.expiresAt });
+      .returning({
+        id: schema.secrets.id,
+        expiresAt: schema.secrets.expiresAt,
+      });
 
     return row;
   }
@@ -36,7 +38,10 @@ export class SecretsService {
       .where(
         and(
           eq(schema.secrets.id, id),
-          or(isNull(schema.secrets.expiresAt), gt(schema.secrets.expiresAt, new Date())),
+          or(
+            isNull(schema.secrets.expiresAt),
+            gt(schema.secrets.expiresAt, new Date()),
+          ),
         ),
       )
       .returning();

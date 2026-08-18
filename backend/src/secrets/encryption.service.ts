@@ -29,7 +29,10 @@ export class EncryptionService implements OnModuleInit {
   encrypt(plaintext: string): EncryptedPayload {
     const iv = randomBytes(IV_LENGTH);
     const cipher = createCipheriv(ALGORITHM, this.key, iv);
-    const ciphertext = Buffer.concat([cipher.update(plaintext, 'utf8'), cipher.final()]);
+    const ciphertext = Buffer.concat([
+      cipher.update(plaintext, 'utf8'),
+      cipher.final(),
+    ]);
     const authTag = cipher.getAuthTag();
     return {
       ciphertext: ciphertext.toString('base64'),
@@ -39,7 +42,11 @@ export class EncryptionService implements OnModuleInit {
   }
 
   decrypt(payload: EncryptedPayload): string {
-    const decipher = createDecipheriv(ALGORITHM, this.key, Buffer.from(payload.iv, 'base64'));
+    const decipher = createDecipheriv(
+      ALGORITHM,
+      this.key,
+      Buffer.from(payload.iv, 'base64'),
+    );
     decipher.setAuthTag(Buffer.from(payload.authTag, 'base64'));
     const plaintext = Buffer.concat([
       decipher.update(Buffer.from(payload.ciphertext, 'base64')),

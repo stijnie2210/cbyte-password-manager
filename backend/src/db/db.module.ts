@@ -1,10 +1,18 @@
-import { Global, Inject, Injectable, Module, OnModuleDestroy } from '@nestjs/common';
+import {
+  Global,
+  Inject,
+  Injectable,
+  Module,
+  OnModuleDestroy,
+} from '@nestjs/common';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schema from './schema';
 
 export const DRIZZLE = 'DRIZZLE';
 export const POSTGRES_CLIENT = 'POSTGRES_CLIENT';
+
+export type Db = ReturnType<typeof drizzle<typeof schema>>;
 
 @Injectable()
 class PostgresClientCloser implements OnModuleDestroy {

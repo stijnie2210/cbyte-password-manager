@@ -5,7 +5,9 @@ export const secrets = pgTable('secrets', {
   ciphertext: text('ciphertext').notNull(),
   iv: text('iv').notNull(),
   authTag: text('auth_tag').notNull(),
-  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   expiresAt: timestamp('expires_at', { withTimezone: true }),
 });
 
