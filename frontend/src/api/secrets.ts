@@ -17,9 +17,9 @@ export class SecretApiError extends Error {
 async function parseErrorMessage(res: Response): Promise<string> {
   try {
     const body = await res.json();
-    return body.message ?? 'Er is iets misgegaan.';
+    return body.message ?? 'Something went wrong.';
   } catch {
-    return 'Er is iets misgegaan.';
+    return 'Something went wrong.';
   }
 }
 

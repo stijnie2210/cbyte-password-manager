@@ -35,7 +35,10 @@ watch(
 </script>
 
 <template>
-  <div class="confetti-layer" aria-hidden="true">
+  <div
+    class="confetti-layer"
+    aria-hidden="true"
+  >
     <span
       v-for="p in particles"
       :key="p.id"

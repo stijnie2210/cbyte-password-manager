@@ -11,6 +11,7 @@
     "lint:check": "eslint ."
   },
   "dependencies": {
+    "@fontsource/jetbrains-mono": "^5.3.0",
     "@mdi/font": "^7.4.47",
     "vue": "^3.5.40",
     "vue-router": "^5.2.0",

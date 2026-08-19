@@ -1,0 +1,90 @@
+:root {
+  --term-green: #00ff9c;
+  --term-green-dim: #0a4a33;
+  --term-bg: #0a0a0a;
+  --term-fg: #d4d4d4;
+  --term-fg-dim: #7a7a7a;
+  --term-border: #2a2a2a;
+}
+
+html,
+body,
+#app {
+  background: var(--term-bg);
+}
+
+html body .v-application {
+  font-family:
+    'JetBrains Mono',
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Consolas,
+    monospace;
+}
+
+.v-btn {
+  letter-spacing: 0.08em;
+  font-weight: 500;
+}
+
+.v-btn__overlay {
+  display: none;
+}
+
+::selection {
+  background: var(--term-green);
+  color: #0a0a0a;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--term-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--term-border);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--term-green-dim);
+}
+
+@keyframes term-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.term-cursor {
+  display: inline-block;
+  width: 0.55em;
+  height: 1.05em;
+  background: var(--term-green);
+  vertical-align: text-bottom;
+  margin-left: 2px;
+  animation: term-blink 1s step-end infinite;
+}
+
+.term-label {
+  display: block;
+  color: var(--term-fg-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+  margin-bottom: 6px;
+}
+
+.term-label::before {
+  content: '> ';
+  color: var(--term-green);
+}

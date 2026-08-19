@@ -11,10 +11,10 @@ const shareLink = ref('');
 const confettiTrigger = ref(0);
 
 const expiryOptions = [
-  { title: 'Geen vervaldatum', value: null },
-  { title: '10 minuten', value: 10 },
-  { title: '1 uur', value: 60 },
-  { title: '1 dag', value: 1440 },
+  { title: 'never', value: null },
+  { title: '10m', value: 10 },
+  { title: '1h', value: 60 },
+  { title: '1d', value: 1440 },
 ];
 
 async function onSubmit() {
@@ -29,7 +29,7 @@ async function onSubmit() {
     confettiTrigger.value++;
   } catch (err) {
     errorMessage.value =
-      err instanceof SecretApiError ? err.message : 'Kon de link niet aanmaken. Probeer het opnieuw.';
+      err instanceof SecretApiError ? err.message : 'Could not create the link. Please try again.';
   } finally {
     loading.value = false;
   }
@@ -55,44 +55,59 @@ function reset() {
       class="mx-auto"
       max-width="560"
     >
-      <v-card
-        elevation="2"
-        class="pa-2"
-      >
-        <v-card-title class="text-h6">
-          Wachtwoord delen
-        </v-card-title>
-        <v-card-subtitle>
-          Maak een eenmalige link aan. Het wachtwoord wordt versleuteld opgeslagen en direct
-          verwijderd zodra de link is geopend.
-        </v-card-subtitle>
+      <v-card class="pa-4">
+        <p class="term-comment">
+          # one-time link, password is encrypted at rest and deleted immediately
+          once it's opened
+        </p>
 
-        <v-card-text v-if="!shareLink">
+        <v-card-text
+          v-if="!shareLink"
+          class="pa-0"
+        >
           <v-form @submit.prevent="onSubmit">
+            <label
+              class="term-label"
+              for="password-field"
+            >password</label>
             <v-text-field
+              id="password-field"
               v-model="password"
-              label="Wachtwoord"
               type="password"
               autocomplete="off"
+              density="comfortable"
+              class="mb-4"
               :disabled="loading"
               required
             />
-            <v-select
+
+            <label class="term-label">expires after</label>
+            <v-btn-toggle
               v-model="expiryOption"
-              :items="expiryOptions"
-              item-title="title"
-              item-value="value"
-              label="Vervalt na"
+              mandatory
+              color="primary"
+              class="mb-6"
               :disabled="loading"
-            />
+            >
+              <v-btn
+                v-for="opt in expiryOptions"
+                :key="String(opt.value)"
+                :value="opt.value"
+                size="small"
+              >
+                {{ opt.title }}
+              </v-btn>
+            </v-btn-toggle>
+
             <v-alert
               v-if="errorMessage"
               type="error"
               density="compact"
               class="mb-4"
             >
-              {{ errorMessage }}
+              <span class="term-out-prefix">✗</span> {{ errorMessage }}
             </v-alert>
+
             <v-btn
               type="submit"
               color="primary"
@@ -100,22 +115,27 @@ function reset() {
               :loading="loading"
               :disabled="!password"
             >
-              Link aanmaken
+              $ generate link
             </v-btn>
           </v-form>
         </v-card-text>
 
-        <v-card-text v-else>
+        <v-card-text
+          v-else
+          class="pa-0"
+        >
           <v-alert
             type="success"
             density="compact"
             class="mb-4"
           >
-            Link aangemaakt. Deze werkt maar één keer.
+            <span class="term-out-prefix">✓</span> link ready, works once
           </v-alert>
+          <label class="term-label">shareable link</label>
           <v-text-field
             :model-value="shareLink"
-            label="Deelbare link"
+            density="comfortable"
+            class="mb-4"
             readonly
           >
             <template #append-inner>
@@ -128,14 +148,40 @@ function reset() {
             </template>
           </v-text-field>
           <v-btn
-            variant="tonal"
+            variant="outlined"
             block
             @click="reset"
           >
-            Nog een link aanmaken
+            $ new
           </v-btn>
         </v-card-text>
+
+        <p class="term-status">
+          status: {{ loading ? 'encrypting…' : shareLink ? 'sent' : 'idle' }} · aes-256-gcm
+        </p>
       </v-card>
     </v-responsive>
   </v-container>
 </template>
+
+<style scoped>
+.term-comment {
+  color: var(--term-fg-dim);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  margin: 0 0 20px;
+}
+
+.term-out-prefix {
+  font-weight: 700;
+}
+
+.term-status {
+  color: var(--term-fg-dim);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  margin: 20px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--term-border);
+}
+</style>

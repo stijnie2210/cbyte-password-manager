@@ -20,7 +20,7 @@ async function reveal() {
     confettiTrigger.value++;
   } catch (err) {
     errorMessage.value =
-      err instanceof SecretApiError ? err.message : 'Kon het wachtwoord niet ophalen.';
+      err instanceof SecretApiError ? err.message : 'Could not retrieve the password.';
   } finally {
     loading.value = false;
   }
@@ -41,22 +41,23 @@ async function copyPassword() {
       class="mx-auto"
       max-width="560"
     >
-      <v-card
-        elevation="2"
-        class="pa-2"
-      >
-        <v-card-title class="text-h6">
-          Wachtwoord bekijken
-        </v-card-title>
+      <v-card class="pa-4">
+        <p class="term-comment">
+          # one-time reveal, this password is deleted from the server immediately after
+          opening
+        </p>
 
-        <v-card-text v-if="!revealed && !errorMessage">
+        <v-card-text
+          v-if="!revealed && !errorMessage"
+          class="pa-0"
+        >
           <v-alert
             type="warning"
             density="compact"
             class="mb-4"
           >
-            Dit wachtwoord kan maar één keer bekeken worden. Zodra je het opent, wordt het
-            permanent verwijderd. Sla het direct op.
+            <span class="term-out-prefix">Note:</span> can only be viewed once, save it
+            immediately
           </v-alert>
           <v-btn
             color="primary"
@@ -64,22 +65,26 @@ async function copyPassword() {
             :loading="loading"
             @click="reveal"
           >
-            Toon wachtwoord
+            $ reveal password
           </v-btn>
         </v-card-text>
 
-        <v-card-text v-else-if="revealed">
+        <v-card-text
+          v-else-if="revealed"
+          class="pa-0"
+        >
           <v-alert
             type="success"
             density="compact"
             class="mb-4"
           >
-            Dit wachtwoord is nu verwijderd van de server. Sla het op, deze pagina toont het
-            niet nogmaals.
+            <span class="term-out-prefix">✓</span> deleted from the server, this page will
+            not show it again
           </v-alert>
+          <label class="term-label">password</label>
           <v-text-field
             :model-value="password"
-            label="Wachtwoord"
+            density="comfortable"
             readonly
           >
             <template #append-inner>
@@ -93,15 +98,44 @@ async function copyPassword() {
           </v-text-field>
         </v-card-text>
 
-        <v-card-text v-else>
+        <v-card-text
+          v-else
+          class="pa-0"
+        >
           <v-alert
             type="error"
             density="compact"
           >
-            {{ errorMessage }}
+            <span class="term-out-prefix">✗</span> {{ errorMessage }}
           </v-alert>
         </v-card-text>
+
+        <p class="term-status">
+          status: {{ loading ? 'decrypting…' : revealed ? 'consumed' : 'idle' }} · aes-256-gcm
+        </p>
       </v-card>
     </v-responsive>
   </v-container>
 </template>
+
+<style scoped>
+.term-comment {
+  color: var(--term-fg-dim);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  margin: 0 0 20px;
+}
+
+.term-out-prefix {
+  font-weight: 700;
+}
+
+.term-status {
+  color: var(--term-fg-dim);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  margin: 20px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--term-border);
+}
+</style>
