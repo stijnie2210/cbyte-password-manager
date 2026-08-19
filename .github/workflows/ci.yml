@@ -7,11 +7,29 @@ on:
 
 jobs:
   backend:
-    name: Backend (lint + build)
+    name: Backend (lint + test + build)
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: backend
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_USER: cbyte
+          POSTGRES_PASSWORD: cbyte
+          POSTGRES_DB: password_sharing
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U cbyte -d password_sharing"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgres://cbyte:cbyte@localhost:5432/password_sharing
+      # Fixed 32-byte key for this throwaway CI run
+      SECRET_ENCRYPTION_KEY: JnOz0UYI/Vfdyo2G5CJS55qQroR2PgjrLUqqYXsPk0Q=
     steps:
       - uses: actions/checkout@v7
 
@@ -23,6 +41,12 @@ jobs:
 
       - run: npm ci
       - run: npm run lint:check
+      - name: Push schema to the CI database
+        run: npm run db:push -- --force
+      - name: Unit tests
+        run: npm test
+      - name: E2e tests
+        run: npm run test:e2e
       - run: npm run build
 
   frontend:
@@ -43,11 +67,3 @@ jobs:
       - run: npm ci
       - run: npm run lint:check
       - run: npm run build
-
-  # deploy:
-  #   name: Deploy
-  #   needs: [backend, frontend]
-  #   runs-on: ubuntu-latest
-  #   if: github.ref == 'refs/heads/main'
-  #   steps:
-  #     - run: echo "TODO: deploy step, not implemented yet"
