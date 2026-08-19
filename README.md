@@ -121,7 +121,7 @@ secrets
 
 ## Beveiligingsontwerp (samenvatting)
 
-Volledige onderbouwing en dreigingsmodel staan in [`SECURITY.md`](./SECURITY.md). Kernpunten:
+Kernpunten:
 
 - **Encryptie, geen hashing** — AES-256-GCM, want het wachtwoord moet weer leesbaar zijn voor de
   ontvanger.
@@ -164,4 +164,4 @@ gewoon eerlijker om te benoemen dan te doen alsof het anders is gegaan.
 - [x] Geen foutmeldingen bij normaal gebruik
 - [x] Voldoende gedocumenteerde `README.md`
 - [x] Kernfunctionaliteit getest (13 tests, unit + e2e)
-- [ ] Laatste commit getagd met `v1.0.0`
+- [x] Laatste commit getagd met `v1.0.0`
