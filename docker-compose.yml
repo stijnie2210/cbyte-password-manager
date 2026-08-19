@@ -4,7 +4,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: cbyte
-      POSTGRES_PASSWORD: cbyte
+      POSTGRES_PASSWORD: Cbyteiscool
       POSTGRES_DB: password_sharing
     ports:
       - "5432:5432"
@@ -22,7 +22,7 @@ services:
     env_file:
       - ./backend/.env
     environment:
-      DATABASE_URL: postgres://cbyte:cbyte@postgres:5432/password_sharing
+      DATABASE_URL: postgres://cbyte:Cbyteiscool@postgres:5432/password_sharing
       PORT: 3000
     ports:
       - "3000:3000"
