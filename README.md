@@ -17,8 +17,11 @@ en het openen in.
 3. Als gebruiker wil ik dat mijn wachtwoord wordt verwijderd na het openen van een link zodat de
    tool AVG-compliant is.
 
-**Optioneel** 4. Maximale geldigheidsduur van een link instellen — **geïmplementeerd** (`expiresInMinutes`). 5. Maximaal aantal uses van een link instellen — **niet geïmplementeerd**, bewust buiten scope
-gehouden binnen de tijdsbox (zie "Bewust niet gedaan" hieronder).
+**Optioneel**
+
+4. Maximale geldigheidsduur van een link instellen: **geïmplementeerd** (`expiresInMinutes`).
+5. Maximaal aantal uses van een link instellen: **niet geïmplementeerd**, bewust buiten scope
+   gehouden binnen de tijdsbox (zie "Bewust niet gedaan" hieronder).
 
 ## Bewuste keuzes t.o.v. de opdracht
 
@@ -123,7 +126,7 @@ secrets
 
 Kernpunten:
 
-- **Encryptie, geen hashing** — AES-256-GCM, want het wachtwoord moet weer leesbaar zijn voor de
+- **Encryptie, geen hashing.** AES-256-GCM, want het wachtwoord moet weer leesbaar zijn voor de
   ontvanger.
 - **Sleutelbeheer: server-side sleutel** (env secret `SECRET_ENCRYPTION_KEY`), bewust gekozen
   boven zero-knowledge (sleutel-in-URL-fragment) vanwege de tijdsbox. Trade-off: de server ziet
